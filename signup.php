@@ -13,9 +13,8 @@ $timestamp = $t2 . ceil( ($t1 * 1000) );
 $data = null;
 $resultStatus = null;
 $conn = mysqli_connect("localhost","root","","sportman");
-$conn->query("set names uft8");
-$conn->query("SET CHARACTER SET UTF8");
-$conn->query("SET CHARACTER_SET_RESULTS='UTF8'");
+include 'UTF8.php';
+
 $queryUser = "select * from user where name='{$name}'";
 $addUser = "insert into user(name,password,timestamp) values('{$name}','{$password}','{$timestamp}')";
 $queryRes = $conn->query($queryUser);

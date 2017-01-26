@@ -9,9 +9,7 @@ $id = $_POST["id"];
 $password = $_POST["password"];
 
 $conn = mysqli_connect("localhost","root","","sportman");
-$conn->query("set names uft8");
-$conn->query("SET CHARACTER SET UTF8");
-$conn->query("SET CHARACTER_SET_RESULTS='UTF8'");
+include 'UTF8.php';
 
 $queryChangePssword = "update user set password='{$password}'where id='{$id}'";
 $conn->query($queryChangePssword);

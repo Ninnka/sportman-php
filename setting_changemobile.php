@@ -18,9 +18,7 @@ switch ($type){
 }
 
 $conn = mysqli_connect("localhost","root","","sportman");
-$conn->query("set names uft8");
-$conn->query("SET CHARACTER SET UTF8");
-$conn->query("SET CHARACTER_SET_RESULTS='UTF8'");
+include 'UTF8.php';
 
 $queryMobile = "update user set mobile='{$mobile}' where id='{$id}'";
 $conn->query($queryMobile);
