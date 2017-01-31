@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<form enctype="multipart/form-data" method="post">
+    <input type="file" id="fileInput" name="uploadFiles" multiple accept="image/*">
+    <br>
+    <button type="button" id="fileSubmit">上传</button>
+</form>
+</body>
+<script>
+    $(function () {
+        var fileList = [];
+
+        var fileInput = document.querySelector("#fileInput");
+        var fileSubmit = document.querySelector("#fileSubmit");
+        fileInput.addEventListener("change", function (e) {
+            var files = e.target.files || e.dataTransfer.files;
+            fileList = files;
+            console.log(fileList);
+        });
+
+        fileSubmit.addEventListener("click", function (e) {
+            for (var i = 0, file; file = fileList[i]; i++) {
+                (function (file) {
+                    var fd = new FormData();
+                    fd.append('text',"this is a text");
+                    fd.append('img',file);
+                    $.ajax({
+                        url: 'http://localhost/sportman/upload_image.php' ,
+                        type: 'POST',
+                        data: fd,
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            console.log(res);
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    });
+                })(file);
+            }
+        });
+    })
+</script>
+</html>
