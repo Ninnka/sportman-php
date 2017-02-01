@@ -5,7 +5,7 @@
  * Date: 2017/2/1
  * Time: 14:25
  */
-$name = $_POST["name"];
+$name = $_GET["name"];
 
 $conn = mysqli_connect("localhost", "root", "", "sportman");
 include 'UTF8.php';
