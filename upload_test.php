@@ -12,10 +12,11 @@ use Qiniu\Auth;
 
 // 引入上传类
 use Qiniu\Storage\UploadManager;
-
+// tQnxz8zdK-CZiorCQnS-6heq2oupw1RbmNd1wquY
+// _Qv8QbYYPCIVpQmYKnfTS-S8N4uYVhjTONQQBM5F
 // 需要填写你的 Access Key 和 Secret Key
-$accessKey = 'tQnxz8zdK-CZiorCQnS-6heq2oupw1RbmNd1wquY';
-$secretKey = '_Qv8QbYYPCIVpQmYKnfTS-S8N4uYVhjTONQQBM5F';
+$accessKey = '';
+$secretKey = '';
 
 // 构建鉴权对象
 $auth = new Auth($accessKey, $secretKey);
