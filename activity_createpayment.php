@@ -7,6 +7,7 @@
  */
 $id = $_POST["id"];
 $id_activity = $_POST["id_activity"];
+
 list($t1, $t2) = explode(' ', microtime());
 $timestamp = $t2 . ceil(($t1 * 1000));
 
@@ -33,12 +34,12 @@ if (mysqli_affected_rows($conn) > 0) {
     if ($tmpArr["totalnumber"] > $tmpArr["currentnumber"]) {
         $conn->query("SET AUTOCOMMIT=0");
         $conn->begin_transaction();
-        if(!$conn->query($queryAddPayment)){
+        if (!$conn->query($queryAddPayment)) {
             $resultStatus = "fail";
             $resultData = "新建订单错误，申请失败";
             $conn->rollback();
         }
-        if(!$conn->query($queryUpdateNumber)){
+        if (!$conn->query($queryUpdateNumber)) {
             $resultStatus = "fail";
             $resultData = "更新人数错误，申请失败";
             $conn->rollback();
