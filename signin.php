@@ -23,3 +23,4 @@ if(mysqli_affected_rows($conn) > 0){
 }
 echo json_encode(array("resultData"=>$resArr,"resultStatus"=>$resultStatus));
 
+mysqli_close($conn);

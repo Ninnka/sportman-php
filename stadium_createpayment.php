@@ -11,8 +11,8 @@ $id_trade = $_POST["id_trade"];
 $id_equipment = $_POST["id_equipment"];
 $quantity = $_POST["quantity"];
 $totalprice = $_POST["totalprice"];
-//$bookstarttime = $_POST["bookstarttime"];
-//$bookendtime = $_POST["bookendtime"];
+$bookstarttime = $_POST["bookstarttime"];
+$bookendtime = $_POST["bookendtime"];
 
 list($t1, $t2) = explode(' ', microtime());
 $timestamp = $t2 . ceil(($t1 * 1000));
@@ -23,21 +23,19 @@ include 'UTF8.php';
 $resultData = "";
 $resultStatus = "";
 
-$queryDulipate = "";
-$queryRemain = "select remain from stadium_equipment where id='{$id_equipment}'";
+$queryDuplicate = "select count(id) AS using from user_payment_stadium where bookstarttime>='{$bookstarttime}' and bookendtime<='{$bookendtime}'";
+$queryTotal = "select total from stadium_equipment where id='{$id_equipment}'";
 $queryAddPayment = "insert into user_payment_stadium(id_user,id_stadium,id_trade,id_equipment,quantity,totalprice,status,timestamp) VALUES('{$id}','{$id_stadium}','{$id_trade}','{$id_equipment}','{$quantity}','{$totalprice}','待付款','{$timestamp}')";
 $queryDescremain = "update stadium_equipment set remain = remain - $quantity where id='{$id_equipment}'";
 
-$resRemain = $conn->query($queryRemain);
-$remain = mysqli_fetch_array($resRemain)["remain"];
-if ($remain == 0) {
+$duplicateamount = mysqli_fetch_array($conn->query($queryDuplicate))["using"];
+
+$resTotal = $conn->query($queryTotal);
+$total = mysqli_fetch_array($resTotal)["total"];
+$remain = $total - $duplicateamount;
+if ($remain < $quantity) {
     $resultStatus = "fail";
-    $resultData = "非常抱歉，没有剩余的设备可选择";
-    echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
-    exit(0);
-} else if ($remain < $quantity) {
-    $resultStatus = "fail";
-    $resultData = "非常抱歉，设备数量不足";
+    $resultData = "非常抱歉，当前时段设备数量不足";
     echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
     exit(0);
 }

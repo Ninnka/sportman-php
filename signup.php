@@ -32,3 +32,5 @@ if(mysqli_affected_rows($conn) == 0){
     $resultStatus = "fail";
 }
 echo json_encode(array("resultData"=>$data,"resultStatus"=>$resultStatus));
+
+mysqli_close($conn);

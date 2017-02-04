@@ -36,3 +36,5 @@ if(!$conn->query($queryDeletePayment)){
 $conn->commit();
 
 echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+
+mysqli_close($conn);

@@ -41,3 +41,5 @@ if(mysqli_affected_rows($conn) > 0){
 $resultData["paid_stadium"] = $stadiumArr;
 
 echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+
+mysqli_close($conn);

@@ -27,3 +27,5 @@ for ($j = 0; $j < mysqli_affected_rows($conn); $j++) {
 $resultStatus = "success";
 
 echo json_encode(array("resultData" => array("activityList" => $activityList, "bannerList" => $bannerList), "resultStatus" => $resultStatus));
+
+mysqli_close($conn);
