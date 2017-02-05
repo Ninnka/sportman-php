@@ -5,6 +5,8 @@
  * Date: 2017/1/22
  * Time: 16:51
  */
+include "access_allow_origin.php";
+
 $name = $_POST["username"];
 $password = $_POST["password"];
 //获取时间戳

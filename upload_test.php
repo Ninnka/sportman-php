@@ -5,6 +5,8 @@
  * Date: 2017/1/31
  * Time: 11:00
  */
+include "access_allow_origin.php";
+
 require_once 'php-sdk-7.1.3/autoload.php';
 
 // 引入鉴权类

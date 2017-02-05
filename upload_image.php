@@ -5,6 +5,8 @@
  * Date: 2017/1/31
  * Time: 13:27
  */
+include "access_allow_origin.php";
+
 $f = $_FILES["img"];
 require 'toolkit.php';
 require_once 'php-sdk-7.1.3/autoload.php';

@@ -5,6 +5,8 @@
  * Date: 2017/2/3
  * Time: 14:01
  */
+include "access_allow_origin.php";
+
 $id = $_POST["id"];
 $id_activity = $_POST["id_activity"];
 

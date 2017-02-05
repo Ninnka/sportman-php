@@ -5,6 +5,8 @@
  * Date: 2017/1/26
  * Time: 13:34
  */
+include "access_allow_origin.php";
+
 $id = $_POST["id"];
 $email = $_POST["email"];
 

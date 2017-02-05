@@ -5,6 +5,8 @@
  * Date: 2017/1/26
  * Time: 12:39
  */
+include "access_allow_origin.php";
+
 $id = $_POST["id"];
 $mobile = "";
 $type = $_POST["type"];

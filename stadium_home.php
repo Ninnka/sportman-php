@@ -5,6 +5,8 @@
  * Date: 2017/1/24
  * Time: 10:14
  */
+include "access_allow_origin.php";
+
 $conn = mysqli_connect("localhost", "root", "", "sportman");
 include 'UTF8.php';
 

@@ -5,11 +5,7 @@
  * Date: 2017/2/3
  * Time: 14:21
  */
-
-/*
- * 1.获取订单相关信息，订单id，订单设备数量，订单总价
- * 2.删除相关订单，设备数量回升，如果已经付款则退款，并设置订单为已取消
- */
+include "access_allow_origin.php";
 
 $id_payment = $_POST["id_payment"];
 $id_equipment = $_POST["id_equipment"];

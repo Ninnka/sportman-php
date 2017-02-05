@@ -5,6 +5,8 @@
  * Date: 2017/1/26
  * Time: 10:09
  */
+include "access_allow_origin.php";
+
 $id = $_POST["id"];
 $sportmanid= $_POST["sportmanid"];
 $conn = mysqli_connect("localhost","root","","sportman");

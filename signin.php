@@ -5,6 +5,8 @@
  * Date: 2017/1/22
  * Time: 11:12
  */
+include "access_allow_origin.php";
+
 $name = $_POST["username"];
 $password = $_POST["password"];
 $conn = mysqli_connect("localhost","root","","sportman");
