@@ -9,7 +9,7 @@ include "access_allow_origin.php";
 
 $id = $_POST["id"];
 
-$conn = mysqli_connect("localhost", "root", "", "sportman");
+include 'connect_mysql.php';
 include 'UTF8.php';
 
 $queryStadium = "select stadium.* from stadium,user_stadium_recommend where user_stadium_recommend.id_user = '{$id}' and stadium.id = user_stadium_recommend.id_stadium";

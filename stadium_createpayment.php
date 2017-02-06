@@ -19,7 +19,7 @@ $bookendtime = $_POST["bookendtime"];
 list($t1, $t2) = explode(' ', microtime());
 $timestamp = $t2 . ceil(($t1 * 1000));
 
-$conn = mysqli_connect("localhost", "root", "", "sportman");
+include 'connect_mysql.php';
 include 'UTF8.php';
 
 $resultData = "";

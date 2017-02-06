@@ -9,8 +9,10 @@ include "access_allow_origin.php";
 
 $name = $_POST["username"];
 $password = $_POST["password"];
-$conn = mysqli_connect("localhost","root","","sportman");
+
+include 'connect_mysql.php';
 include 'UTF8.php';
+
 $queryUser = "select * from user where name='{$name}' and password='{$password}'";
 $res = $conn->query($queryUser);
 $resArr = [];

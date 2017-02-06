@@ -12,7 +12,7 @@ $id_equipment = $_POST["id_equipment"];
 $quantity = $_POST["quantity"];
 $totalprice = $_POST["totalprice"];
 
-$conn = mysqli_connect("localhost", "root", "", "sportman");
+include 'connect_mysql.php';
 include 'UTF8.php';
 
 $resultData = "";

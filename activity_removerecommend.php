@@ -10,7 +10,7 @@ include "access_allow_origin.php";
 $id = $_POST["id"];
 $id_activity = $_POST["id_activity"];
 
-$conn = mysqli_connect("localhost", "root", "", "sportman");
+include 'connect_mysql.php';
 include 'UTF8.php';
 
 $resultData = "";

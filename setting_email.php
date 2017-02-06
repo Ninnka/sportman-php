@@ -10,7 +10,7 @@ include "access_allow_origin.php";
 $id = $_POST["id"];
 $email = $_POST["email"];
 
-$conn = mysqli_connect("localhost","root","","sportman");
+include 'connect_mysql.php';
 include 'UTF8.php';
 
 $queryEmail = "update user set email='{$email}' where id='{$id}'";
