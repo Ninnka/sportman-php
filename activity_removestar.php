@@ -17,15 +17,24 @@ $resultData = "";
 $resultStatus = "";
 
 $queryRemoveStar = "delete from user_activity_star where id_user='{$id}' and id_activity='{$id_activity}'";
+$queryUpdateStarCount = "update activity set starcount = starcount - 1 where id='{$id_activity}'";
 
-$res = $conn->query($queryRemoveStar);
-if(mysqli_affected_rows($conn) > 0){
-    $resultStatus = "success";
-    $resultData = "取消收藏成功";
-}else {
+$conn->query("SET AUTOCOMMIT=0");
+$conn->begin_transaction();
+
+$removeRes = $conn->query($queryRemoveStar);
+$updateRes = $conn->query($queryUpdateStarCount);
+
+if(!$removeRes || !$updateRes){
     $resultStatus = "fail";
     $resultData = "取消失败，没有对应收藏信息";
+    $conn->rollback();
+}else{
+    $resultStatus = "success";
+    $resultData = "取消收藏成功";
 }
+
+$conn->commit();
 
 echo json_encode(array("resultData"=>$resultData, "resultStatus"=>$resultStatus));
 

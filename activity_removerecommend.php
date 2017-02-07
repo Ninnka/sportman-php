@@ -17,15 +17,24 @@ $resultData = "";
 $resultStatus = "";
 
 $queryRemoveRecommend = "delete from user_activity_recommend where id_user='{$id}' and id_activity='{$id_activity}'";
+$queryUpdateRecommendCount = "update activity set recommendcount = recommendcount - 1 where id='{$id_activity}'";
 
-$res = $conn->query($queryRemoveRecommend);
-if(mysqli_affected_rows($conn) > 0){
-    $resultStatus = "success";
-    $resultData = "取消推荐成功";
-}else {
+$conn->query("SET AUTOCOMMIT=0");
+$conn->begin_transaction();
+
+$removeRes = $conn->query($queryRemoveRecommend);
+$updateRes = $conn->query($queryUpdateRecommendCount);
+
+if(!$removeRes || !$updateRes){
     $resultStatus = "fail";
     $resultData = "取消失败，没有对应推荐信息";
+    $conn->rollback();
+}else{
+    $resultStatus = "success";
+    $resultData = "取消推荐成功";
 }
+
+$conn->commit();
 
 echo json_encode(array("resultData"=>$resultData, "resultStatus"=>$resultStatus));
 
