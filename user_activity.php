@@ -16,7 +16,11 @@ include 'UTF8.php';
 $resultStatus = "";
 $resultData = [];
 
-$queryActivity= "select activity.*,user_activity.registertime from activity,user_activity where user_activity.id_user = '{$id}' and user_activity.id_activity = activity.id and activity.status='{$status}'";
+$queryActivity = "select user_activity.*,activity.name,activity.post,activity.starttime,activity.position from activity,user_activity where user_activity.id_user = '{$id}' and user_activity.id_activity = activity.id";
+if($status != "all"){
+    $queryActivity= "select user_activity.*,activity.name,activity.post,activity.starttime,activity.position from activity,user_activity where user_activity.id_user = '{$id}' and user_activity.id_activity = activity.id and user_activity.status='{$status}'";
+}
+
 $activityList= $conn->query($queryActivity);
 
 if(mysqli_affected_rows($conn) > 0){
