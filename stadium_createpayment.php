@@ -27,8 +27,7 @@ $resultStatus = "";
 
 $queryDuplicate = "select count(id) AS using from user_payment_stadium where bookstarttime>='{$bookstarttime}' and bookendtime<='{$bookendtime}'";
 $queryTotal = "select total from stadium_equipment where id='{$id_equipment}'";
-$queryAddPayment = "insert into user_payment_stadium(id_user,id_stadium,id_trade,id_equipment,quantity,totalprice,status,timestamp) VALUES('{$id}','{$id_stadium}','{$id_trade}','{$id_equipment}','{$quantity}','{$totalprice}','待付款','{$timestamp}')";
-$queryDescremain = "update stadium_equipment set remain = remain - $quantity where id='{$id_equipment}'";
+$queryAddPayment = "insert into user_payment_stadium(id_user,id_stadium,id_trade,id_equipment,quantity,totalprice,bookstarttime,bookendtime,status,timestamp) VALUES('{$id}','{$id_stadium}','{$id_trade}','{$id_equipment}','{$quantity}','{$totalprice}','{$bookstarttime}','{$bookendtime}','待付款','{$timestamp}')";
 
 $duplicateamount = mysqli_fetch_array($conn->query($queryDuplicate))["using"];
 
@@ -46,9 +45,12 @@ $conn->query("SET AUTOCOMMIT=0");
 $conn->begin_transaction();
 
 $addIndex = $conn->query($queryAddPayment);
-$updateIndex = $conn->query($queryDescremain);
+$paymentIndex = mysqli_insert_id($conn);
 
-if (!$addIndex || !$updateIndex) {
+$queryAddUserStadium = "insert into user_stadium(id_user,id_stadium,id_payment,booktime,status) VALUES('{$id}','{$id_stadium}','{$paymentIndex}','{$timestamp}','待使用')";
+$addUserStadiumIndex = $conn->query($queryAddUserStadium);
+
+if (!$addIndex || !$addUserStadiumIndex) {
     $resultStatus = "fail";
     $resultData = "非常抱歉，新建订单失败";
     $conn->rollback();
