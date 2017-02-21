@@ -20,8 +20,10 @@ $resultData="";
 
 if(mysqli_affected_rows($conn) > 0){
     $resultStatus = "success";
+    $resultData = "修改密码成功";
 }else{
     $resultStatus = "fail";
+    $resultData = "修改密码失败";
 }
 echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
 
