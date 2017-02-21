@@ -24,6 +24,7 @@ $queryNumber = "select totalnumber,currentnumber from activity where id='{$id_ac
 $queryAddPayment = "insert into user_payment_activity(id_user,id_activity,status,timestamp) VALUES('{$id}','{$id_activity}','待付款','{$timestamp}')";
 $queryUpdateNumber = "update activity set currentnumber=currentnumber+1 where id='{$id_activity}'";
 
+$queryGetActivityName = "select activity.name from activity where activity.id = '{$id_activity}'";
 
 $conn->query($queryDuplicate);
 
@@ -65,6 +66,14 @@ $queryAddUserActivity = "insert into user_activity(id_user,id_activity,id_paymen
 if (!$conn->query($queryAddUserActivity)) {
     $resultStatus = "fail";
     $resultData = "更新用户活动列表失败，申请失败";
+    $conn->rollback();
+}
+
+$theme = mysqli_fetch_assoc($conn->query($queryGetActivityName)).name;
+$queryAddHistory = "insert into user_history(id_user,action,theme,timestamp) VALUES('{$id}','参加活动','{$theme}','{$timestamp}')";
+if(!$conn->query($queryAddHistory)){
+    $resultStatus = "fail";
+    $resultData = "更新用户历史失败，申请失败";
     $conn->rollback();
 }
 

@@ -29,6 +29,8 @@ $queryDuplicate = "select count(id) AS using from user_payment_stadium where boo
 $queryTotal = "select total from stadium_equipment where id='{$id_equipment}'";
 $queryAddPayment = "insert into user_payment_stadium(id_user,id_stadium,id_trade,id_equipment,quantity,totalprice,bookstarttime,bookendtime,status,timestamp) VALUES('{$id}','{$id_stadium}','{$id_trade}','{$id_equipment}','{$quantity}','{$totalprice}','{$bookstarttime}','{$bookendtime}','待付款','{$timestamp}')";
 
+$queryGetStadiumName = "select stadium.name from stadium where stadium.id = '{$id_stadium}'";
+
 $duplicateamount = mysqli_fetch_array($conn->query($queryDuplicate))["using"];
 
 $resTotal = $conn->query($queryTotal);
@@ -57,6 +59,15 @@ if (!$addIndex || !$addUserStadiumIndex) {
 }else{
     $resultStatus = "success";
     $resultData = "预定成功";
+}
+
+$theme = mysqli_fetch_assoc($conn->query($queryGetStadiumName)).name;
+$queryAddHistory = "insert into user_history(id_user,action,theme,timestamp) VALUES('{$id}','预定场馆','{$theme}','{$timestamp}')";
+
+if(!$conn->query($queryAddHistory)){
+    $resultStatus = "fail";
+    $resultData = "更新用户历史失败，预定失败";
+    $conn->rollback();
 }
 
 $conn->commit();
