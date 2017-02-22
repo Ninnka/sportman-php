@@ -15,8 +15,8 @@ include 'UTF8.php';
 $resultStatus = "";
 $resultData = [];
 
-$queryActivity = "select activity.*,user_payment_activity.id AS id_payment from activity,user_payment_activity where activity.id = user_payment_activity.id_activity and user_payment_activity.id_user = '{$id}' and user_payment_activity.status = '已付款'";
-$queryStadium = "select stadium.*,user_payment_stadium.id AS id_payment from stadium,user_payment_stadium where stadium.id = user_payment_stadium.id_stadium and user_payment_stadium.id_user = '{$id}' and user_payment_stadium.status = '已付款'";
+$queryActivity = "select activity.*,user_payment_activity.id AS id_payment,user_activity.registertime from activity,user_payment_activity,user_activity where activity.id = user_payment_activity.id_activity and user_payment_activity.id_user = '{$id}' and user_payment_activity.status = '已付款' and user_activity.id_activity = activity.id";
+$queryStadium = "select stadium.*,user_payment_stadium.id AS id_payment,user_payment_stadium.quantity,user_payment_stadium.bookstarttime,user_payment_stadium.bookendtime from stadium,user_payment_stadium where stadium.id = user_payment_stadium.id_stadium and user_payment_stadium.id_user = '{$id}' and user_payment_stadium.status = '已付款'";
 
 $activityList = $conn->query($queryActivity);
 $activityArr = [];
