@@ -12,7 +12,7 @@ $id = $_POST["id"];
 include 'connect_mysql.php';
 include 'UTF8.php';
 
-$queryRecommend = "select activity.* from activity,user_activity_recommend
+$queryRecommend = "select activity.id,activity.name,activity.thumbnail,activity.area,activity.host from activity,user_activity_recommend
 WHERE user_activity_recommend.id_user = '{$id}' and user_activity_recommend.id_activity = activity.id";
 $resList = $conn->query($queryRecommend);
 $resultData = [];

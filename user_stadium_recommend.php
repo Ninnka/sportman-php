@@ -12,7 +12,7 @@ $id = $_POST["id"];
 include 'connect_mysql.php';
 include 'UTF8.php';
 
-$queryStadium = "select stadium.* from stadium,user_stadium_recommend where user_stadium_recommend.id_user = '{$id}' and stadium.id = user_stadium_recommend.id_stadium";
+$queryStadium = "select stadium.id,stadium.name,stadium.thumbnail,stadium.area,stadium.trade,stadium.opentime from stadium,user_stadium_recommend where user_stadium_recommend.id_user = '{$id}' and stadium.id = user_stadium_recommend.id_stadium";
 $resultStatus = "";
 $resultData = [];
 
