@@ -12,6 +12,9 @@ $id_stadium = $_POST["id_stadium"];
 $review = $_POST["review"];
 $score = $_POST["score"];
 
+list($t1, $t2) = explode(' ', microtime());
+$timestamp = $t2 . ceil(($t1 * 1000));
+
 include 'connect_mysql.php';
 include 'UTF8.php';
 
@@ -19,7 +22,7 @@ $resultData = "";
 $resultStatus = "";
 
 $queryDuplicate = "select id from user_review where id_user='{$id_user}' and id_stadium='{$id_stadium}'";
-$queryAddReview = "insert into user_review(id_user,id_stadium,review,score) VALUES('{$id_user}','{$id_stadium}','{$review}','{$score}')";
+$queryAddReview = "insert into user_review(id_user,id_stadium,review,score,timestamp) VALUES('{$id_user}','{$id_stadium}','{$review}','{$score}','{$timestamp}')";
 $queryUpdateReviewCount = "update stadium set reviewcount = reviewcount + 1 where id='{$id_stadium}'";
 
 $conn->query($queryDuplicate);
