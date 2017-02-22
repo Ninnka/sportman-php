@@ -69,7 +69,7 @@ if (!$conn->query($queryAddUserActivity)) {
     $conn->rollback();
 }
 
-$theme = mysqli_fetch_assoc($conn->query($queryGetActivityName)).name;
+$theme = mysqli_fetch_array($conn->query($queryGetActivityName))["name"];
 $queryAddHistory = "insert into user_history(id_user,action,theme,timestamp) VALUES('{$id}','参加活动','{$theme}','{$timestamp}')";
 if(!$conn->query($queryAddHistory)){
     $resultStatus = "fail";

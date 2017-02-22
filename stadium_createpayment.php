@@ -61,7 +61,7 @@ if (!$addIndex || !$addUserStadiumIndex) {
     $resultData = "预定成功";
 }
 
-$theme = mysqli_fetch_assoc($conn->query($queryGetStadiumName)).name;
+$theme = mysqli_fetch_array($conn->query($queryGetStadiumName))["name"];
 $queryAddHistory = "insert into user_history(id_user,action,theme,timestamp) VALUES('{$id}','预定场馆','{$theme}','{$timestamp}')";
 
 if(!$conn->query($queryAddHistory)){
