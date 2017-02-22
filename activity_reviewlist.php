@@ -15,18 +15,32 @@ include 'UTF8.php';
 $resultData = [];
 $resultStatus = "";
 
-$queryReview = "select * from user_review where id_activity='{$id_activity}'";
+$queryReview = "select user_review.*,user.name,user.avatar from user_review,user where user_review.id_activity='{$id_activity}' and user_review.id_user = user.id";
+$queryFeature = "select * from activity_reviewfeature where id_activity='{$id_activity}'";
+$queryTotalScore = "select avg(score) AS totalscore from user_review where id_activity is not null";
+
+$reviewArr = [];
 $reviewList = $conn->query($queryReview);
 if (mysqli_affected_rows($conn) > 0) {
     $resultStatus = "success";
     for ($i = 0; $i < mysqli_affected_rows($conn); $i++) {
-        $resultData[] = mysqli_fetch_assoc($reviewList);
+        $reviewArr[] = mysqli_fetch_assoc($reviewList);
     }
 }else {
     $resultStatus = "fail";
     $resultData = "";
 }
 
-echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+$featureArr = [];
+$featureList = $conn->query($queryFeature);
+if(mysqli_affected_rows($conn) > 0) {
+    for ($i = 0; $i < mysqli_affected_rows($conn); $i++) {
+        $featureArr[] = mysqli_fetch_assoc($featureList);
+    }
+}
+
+$totalscore = mysqli_fetch_array($conn->query($queryTotalScore))["totalscore"];
+
+echo json_encode(array("resultData" => array("totalscore"=>$totalscore,"reviewList"=>$reviewArr,"featureList"=>$featureArr), "resultStatus" => $resultStatus));
 
 mysqli_close($conn);
