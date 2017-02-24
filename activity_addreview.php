@@ -11,6 +11,8 @@ $id_user = $_POST["id_user"];
 $id_activity = $_POST["id_activity"];
 $review = $_POST["review"];
 $score = $_POST["score"];
+$agreefeature = $_POST["agreefeature"];
+$addedfeature = $_POST["addedfeature"];
 
 list($t1, $t2) = explode(' ', microtime());
 $timestamp = $t2 . ceil(($t1 * 1000));
