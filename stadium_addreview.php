@@ -8,7 +8,7 @@
 include "access_allow_origin.php";
 
 $id_user = $_POST["id_user"];
-$id_stadium = $_POST["id_stadium"];
+$id_stadium = $_POST["id_item"];
 $review = $_POST["review"];
 $score = $_POST["score"];
 $agreefeature = $_POST["agreefeature"];
@@ -26,6 +26,20 @@ $resultStatus = "";
 $queryDuplicate = "select id from user_review where id_user='{$id_user}' and id_stadium='{$id_stadium}'";
 $queryAddReview = "insert into user_review(id_user,id_stadium,review,score,timestamp) VALUES('{$id_user}','{$id_stadium}','{$review}','{$score}','{$timestamp}')";
 $queryUpdateReviewCount = "update stadium set reviewcount = reviewcount + 1 where id='{$id_stadium}'";
+
+$queryAddFeature = "insert into stadium_reviewfeature(id_stadium,feature,agree)";
+for($i = 0; $i<count($addedfeature); $i++){
+    $queryAddFeature = $queryAddFeature." VALUES('{$id_stadium}', '{$addedfeature[$i]["feature"]}', 1) ";
+}
+
+$queryUpdateFeatureCount = "update stadium_reviewfeature set agree = agree + 1 where";
+for($j = 0; $j < count($agreefeature); $j++){
+    if($j == count($agreefeature) - 1) {
+        $queryUpdateFeatureCount = $queryUpdateFeatureCount." id='{$agreefeature[$j]}'";
+    }else {
+        $queryUpdateFeatureCount = $queryUpdateFeatureCount." id='{$agreefeature[$j]}' or";
+    }
+}
 
 $conn->query($queryDuplicate);
 if (mysqli_affected_rows($conn) > 0) {
@@ -47,6 +61,18 @@ if (!$insertIndex || !$updateIndex) {
     $conn->rollback();
 } else {
     $resultData = "评论成功";
+    $resultStatus = "success";
+}
+
+$addfeatureIndex = $conn->query($queryAddFeature);
+$updataFeatureIndex = $conn->query($queryUpdateFeatureCount);
+
+if(!$addfeatureIndex || !$updataFeatureIndex){
+    $resultData = "评论失败，评论标签失败";
+    $resultStatus = "fail";
+    $conn->rollback();
+} else {
+    $resultData = "评论成功，评论标签成功";
     $resultStatus = "success";
 }
 
