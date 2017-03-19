@@ -7,15 +7,13 @@
  */
 include "access_allow_origin.php";
 
-$id = $_GET["id"];
-
 include 'connect_mysql.php';
 include 'UTF8.php';
 
 $resultData = [];
 $resultStatus = "";
 
-$querySocialcircle = "select * from user_socialcircle";
+$querySocialcircle = "select user_socialcircle.*,user.avatar from user_socialcircle,user where user_socialcircle.id_user=user.id";
 $querySocialcircleImages = "select id AS id_image,id_socialcircle,imgsrc from user_socialimage where ";
 
 $socialcircleArr = $conn->query($querySocialcircle);
