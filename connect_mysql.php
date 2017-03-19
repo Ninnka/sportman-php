@@ -5,4 +5,4 @@
  * Date: 2017/2/6
  * Time: 上午9:58
  */
-$conn = mysqli_connect("localhost", "root", "root", "sportman");
+$conn = mysqli_connect("localhost", "root", "", "sportman");
