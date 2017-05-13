@@ -25,17 +25,22 @@ include 'UTF8.php';
 $resultData = "";
 $resultStatus = "";
 
-$queryDuplicate = "select count(id) AS using from user_payment_stadium where bookstarttime>='{$bookstarttime}' and bookendtime<='{$bookendtime}'";
+$queryDuplicate = "select count(id) AS isused from user_payment_stadium where bookstarttime>='{$bookstarttime}' and bookendtime<='{$bookendtime}'";
 $queryTotal = "select total from stadium_equipment where id='{$id_equipment}'";
 $queryAddPayment = "insert into user_payment_stadium(id_user,id_stadium,id_trade,id_equipment,quantity,totalprice,bookstarttime,bookendtime,status,timestamp) VALUES('{$id}','{$id_stadium}','{$id_trade}','{$id_equipment}','{$quantity}','{$totalprice}','{$bookstarttime}','{$bookendtime}','待付款','{$timestamp}')";
 
 $queryGetStadiumName = "select stadium.name from stadium where stadium.id = '{$id_stadium}'";
 
-$duplicateamount = mysqli_fetch_array($conn->query($queryDuplicate))["using"];
+$duplicateQueryResult = $conn->query($queryDuplicate);
+//$resultData = $duplicateQueryResult;
+$duplicateamount = 0;
+if(mysqli_num_rows($duplicateQueryResult)) {
+    $duplicateamount = mysqli_fetch_array($duplicateQueryResult)["isused"];
+}
 
 $resTotal = $conn->query($queryTotal);
 $total = mysqli_fetch_array($resTotal)["total"];
-$remain = $total - $duplicateamount;
+$remain = $total - (int)$duplicateamount;
 if ($remain < $quantity) {
     $resultStatus = "fail";
     $resultData = "非常抱歉，当前时段设备数量不足";
@@ -58,7 +63,7 @@ if (!$addIndex || !$addUserStadiumIndex) {
     $conn->rollback();
 }else{
     $resultStatus = "success";
-    $resultData = "预定成功";
+    $resultData = $addIndex;
 }
 
 $theme = mysqli_fetch_array($conn->query($queryGetStadiumName))["name"];
@@ -72,7 +77,7 @@ if(!$conn->query($queryAddHistory)){
 
 $conn->commit();
 
-echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+echo json_encode(array("resultData" => array("id_payment" => $paymentIndex, "id_stadium" => $id_stadium), "resultStatus" => $resultStatus));
 
 mysqli_close($conn);
 
