@@ -7,20 +7,26 @@
  */
 include "access_allow_origin.php";
 
+$id = $_POST["id"];
+
 include 'connect_mysql.php';
 include 'UTF8.php';
 
 $resultData = [];
 $resultStatus = "";
 
-$querySocialcircle = "select user_socialcircle.*,user.avatar from user_socialcircle,user where user_socialcircle.id_user=user.id";
+$socialList = [];
+
+$querySocialcircle = "select user_socialcircle.*,user.avatar,user.name AS uname from user_socialcircle,user where user_socialcircle.id_user=user.id";
 $querySocialcircleImages = "select id AS id_image,id_socialcircle,imgsrc from user_socialimage where ";
+
+$querySocialLike = "select user_sociallike.id_socialcircle from user_sociallike where user_sociallike.id_user='{$id}'";
 
 $socialcircleArr = $conn->query($querySocialcircle);
 if(mysqli_affected_rows($conn) > 0) {
     $resultStatus = "success";
     for ($i = 0; $i < mysqli_affected_rows($conn); $i++) {
-        $resultData[] = mysqli_fetch_assoc($socialcircleArr);
+        $socialList[] = mysqli_fetch_assoc($socialcircleArr);
     }
 }else {
     $resultStatus = "fail";
@@ -28,9 +34,9 @@ if(mysqli_affected_rows($conn) > 0) {
 }
 
 $ids = [];
-if(count($resultData) > 0) {
-    for($j = 0; $j < count($resultData); $j++) {
-        $ids[] = $resultData[$j]["id"];
+if(count($socialList) > 0) {
+    for($j = 0; $j < count($socialList); $j++) {
+        $ids[] = $socialList[$j]["id"];
     }
 }
 
@@ -51,19 +57,30 @@ if(count($ids) > 0) {
     }
 }
 
-for($o = 0; $o < count($resultData); $o++) {
-    $resultData[$o]["images"] = [];
+for($o = 0; $o < count($socialList); $o++) {
+    $socialList[$o]["images"] = [];
     if(count($imagesList) > 0) {
         for($l = 0; $l < count($imagesList); $l++){
-            if($resultData[$o]["id"] == $imagesList[$l]["id_socialcircle"]) {
-                $resultData[$o]["images"][] = $imagesList[$l];
+            if($socialList[$o]["id"] == $imagesList[$l]["id_socialcircle"]) {
+                $socialList[$o]["images"][] = $imagesList[$l];
             }
         }
     }
 }
 
+$resultData["socialList"] = $socialList;
 
-//var_dump($imagesArr);
+$socialLikeArr = [];
+$queryLikeRes = $conn->query($querySocialLike);
+if(mysqli_affected_rows($conn) > 0) {
+    for($l = 0; $l < mysqli_affected_rows($conn); $l++){
+        $socialLikeArr[] = mysqli_fetch_assoc($queryLikeRes)["id_socialcircle"];
+    }
+}
+
+//var_dump($socialLikeArr);
+$resultData["socialLike"] = $socialLikeArr;
+
 echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
 
 mysqli_close($conn);

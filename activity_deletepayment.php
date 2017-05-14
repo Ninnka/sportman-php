@@ -19,7 +19,7 @@ include 'UTF8.php';
 $resultData = "";
 $resultStatus = "";
 
-$queryDeletePayment = "update user_payment_activity set status='已取消' where id_user='{$id}' and id_activity='{$id_activity}'";
+$queryDeletePayment = "update user_payment_activity set status='已取消' where id_user='{$id}' and id_activity='{$id_activity}' and status!='已取消'";
 $queryDescCurrentnumber = "update activity set currentnumber = currentnumber - 1 where id='{$id_activity}'";
 
 $queryGetActivityName = "select activity.name from activity where activity.id = '{$id_activity}'";
@@ -47,6 +47,18 @@ if(!$conn->query($queryAddHistory)){
     $resultStatus = "fail";
     $resultData = "更新用户历史失败，申请失败";
     $conn->rollback();
+    echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+    exit(0);
+}
+
+$queryDeleteUserActivity = "delete from user_activity where id_user='{$id}' and id_activity='{$id_activity}'";
+$queryDeleteUARes = $conn->query($queryDeleteUserActivity);
+if(mysqli_affected_rows($conn) == 0) {
+    $resultStatus = "fail";
+    $resultData = "删除用户相关活动失败";
+    $conn->rollback();
+    echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+    exit(0);
 }
 
 $conn->commit();

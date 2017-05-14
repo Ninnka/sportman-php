@@ -25,9 +25,11 @@ include 'UTF8.php';
 $resultData = "";
 $resultStatus = "";
 
+$uid_payment = (string)$id.date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8).(string)$id_stadium;
+
 $queryDuplicate = "select count(id) AS isused from user_payment_stadium where bookstarttime>='{$bookstarttime}' and bookendtime<='{$bookendtime}'";
 $queryTotal = "select total from stadium_equipment where id='{$id_equipment}'";
-$queryAddPayment = "insert into user_payment_stadium(id_user,id_stadium,id_trade,id_equipment,quantity,totalprice,bookstarttime,bookendtime,status,timestamp) VALUES('{$id}','{$id_stadium}','{$id_trade}','{$id_equipment}','{$quantity}','{$totalprice}','{$bookstarttime}','{$bookendtime}','待付款','{$timestamp}')";
+$queryAddPayment = "insert into user_payment_stadium(id_user,id_stadium,id_trade,id_equipment,quantity,totalprice,bookstarttime,bookendtime,status,timestamp,uid_payment) VALUES('{$id}','{$id_stadium}','{$id_trade}','{$id_equipment}','{$quantity}','{$totalprice}','{$bookstarttime}','{$bookendtime}','待付款','{$timestamp}','{$uid_payment}')";
 
 $queryGetStadiumName = "select stadium.name from stadium where stadium.id = '{$id_stadium}'";
 
@@ -61,6 +63,8 @@ if (!$addIndex || !$addUserStadiumIndex) {
     $resultStatus = "fail";
     $resultData = "非常抱歉，新建订单失败";
     $conn->rollback();
+    echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+    exit(0);
 }else{
     $resultStatus = "success";
     $resultData = $addIndex;
@@ -77,7 +81,7 @@ if(!$conn->query($queryAddHistory)){
 
 $conn->commit();
 
-echo json_encode(array("resultData" => array("id_payment" => $paymentIndex, "id_stadium" => $id_stadium), "resultStatus" => $resultStatus));
+echo json_encode(array("resultData" => array("id_payment" => $paymentIndex, "id_stadium" => $id_stadium, "uid_payment" => $uid_payment), "resultStatus" => $resultStatus));
 
 mysqli_close($conn);
 

@@ -10,8 +10,8 @@ include "access_allow_origin.php";
 $id = $_POST["id"];
 $id_stadium = $_POST["id_stadium"];
 $id_payment = $_POST["id_payment"];
-$id_equipment = $_POST["id_equipment"];
-$quantity = $_POST["quantity"];
+//$id_equipment = $_POST["id_equipment"];
+//$quantity = $_POST["quantity"];
 
 list($t1, $t2) = explode(' ', microtime());
 $timestamp = $t2 . ceil(($t1 * 1000));
@@ -57,6 +57,18 @@ if (!$conn->query($queryAddHistory)) {
     $resultStatus = "fail";
     $resultData = "更新用户历史失败，预定失败";
     $conn->rollback();
+    echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+    exit(0);
+}
+
+$queryDeleteUserStadium = "delete from user_stadium where id_user='{$id}' and id_stadium='{$id_stadium}'";
+$queryDeleteUSRes = $conn->query($queryDeleteUserStadium);
+if(mysqli_affected_rows($conn) == 0) {
+    $resultStatus = "fail";
+    $resultData = "删除用户相关场馆失败";
+    $conn->rollback();
+    echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+    exit(0);
 }
 
 $conn->commit();

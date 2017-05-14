@@ -6,7 +6,7 @@
  * Time: 16:23
  */
 include "access_allow_origin.php";
-
+$queryIsAttend = "select user.id from activity,user where user.id=user_payment_activity. and user_payment_activity.id_activity=activity.id";
 $id = $_POST["id"];
 $id_activity = $_POST["id_activity"];
 
