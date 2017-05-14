@@ -15,7 +15,7 @@ include 'UTF8.php';
 $resultData = "";
 $resultStatus = "";
 
-$queryPayment = "select activity.*,user_payment_activity.id AS id_payment from activity,user_payment_activity where activity.id = user_payment_activity.id_activity and user_payment_activity.id='{$id}'";
+$queryPayment = "select user.name AS uname,user.gender AS ugender,user.address AS uaddress,user.mobile AS umobile,activity.*,user_payment_activity.id AS id_payment,user_payment_activity.timestamp AS id_payment_timestamp,user_payment_activity.uid_payment AS uid_payment from activity,user_payment_activity,user where activity.id = user_payment_activity.id_activity and user_payment_activity.id='{$id}' and user.id=user_payment_activity.id_user";
 
 $res = $conn->query($queryPayment);
 if (mysqli_affected_rows($conn) > 0) {

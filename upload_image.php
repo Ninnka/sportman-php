@@ -49,12 +49,16 @@ if ($f) {
         // 调用 UploadManager 的 putFile 方法进行文件的上传
         list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
         if ($err !== null) {
+            // 返回信息
             echo json_encode($err);
+            // 删除服务器上的临时文件
             if(is_file("img/".$tmpFileName)){
                 unlink("img/".$tmpFileName);
             }
         } else {
+            // 返回信息
             echo json_encode($ret);
+            // 删除服务器上的临时文件
             if(is_file("img/".$tmpFileName)){
                 unlink("img/".$tmpFileName);
             }
