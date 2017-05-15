@@ -5,6 +5,7 @@
  * Date: 2017/3/18
  * Time: 21:23
  */
+ 
 include "access_allow_origin.php";
 
 $id = $_POST["id"];
@@ -65,6 +66,8 @@ for($o = 0; $o < count($socialList); $o++) {
                 $socialList[$o]["images"][] = $imagesList[$l];
             }
         }
+    }else {
+        $socialList[$o]["images"] = [];
     }
 }
 

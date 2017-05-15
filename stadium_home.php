@@ -7,6 +7,9 @@
  */
 include "access_allow_origin.php";
 
+$area=$_POST["area"];
+$sport_type=$_POST["sport_type"];
+
 include 'connect_mysql.php';
 include 'UTF8.php';
 
