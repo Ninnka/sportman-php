@@ -22,14 +22,11 @@ include 'UTF8.php';
 $resultData = [];
 $resultStatus = "";
 
-$resultData = [];
-$resultStatus = "";
-
 $queryAddComment = "insert into user_socialcomment(id_user,id_socialcircle,timestamp,locate,comment) VALUES('{$id}','{$id_socialcircle}','{$timestamp}','{$locate}','{$comment}')";
 
 $addCommentRes = $conn->query($queryAddComment);
 
-if(mysqli_affected_rows($addCommentRes) > 0) {
+if(mysqli_affected_rows($conn) > 0) {
     $resultStatus = "success";
     $resultData = "操作成功";
 }else {
