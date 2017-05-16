@@ -28,26 +28,26 @@
         });
 
         fileSubmit.addEventListener("click", function (e) {
+            var fd = new FormData();
+            fd.append('text',"this is a text");
             for (var i = 0, file; file = fileList[i]; i++) {
                 (function (file) {
-                    var fd = new FormData();
-                    fd.append('text',"this is a text");
-                    fd.append('img',file);
-                    $.ajax({
-                        url: 'http://localhost/sportman/upload_image.php' ,
-                        type: 'POST',
-                        data: fd,
-                        contentType: false,
-                        processData: false,
-                        success: function (res) {
-                            console.log(res);
-                        },
-                        error: function (err) {
-                            console.log(err);
-                        }
-                    });
+                    fd.append('imgs[]',file);
                 })(file);
             }
+            $.ajax({
+                url: 'http://localhost/sportman/upload_image.php' ,
+                type: 'POST',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
         });
     })
 </script>

@@ -8,6 +8,7 @@
 include "access_allow_origin.php";
 
 $id = $_POST["id"];
+$gender = $_POST["gender"];
 $address = $_POST["address"];
 
 include 'connect_mysql.php';
@@ -15,12 +16,12 @@ include 'UTF8.php';
 
 $resultStatus= "";
 $resultData="";
-$queryAddress = "update user set address='{$address}' where id='{$id}'";
-$conn->query($queryAddress);
+$queryGender = "update user set gender='{$gender}', address='{$address}' where id='{$id}'";
+$conn->query($queryGender);
 
 if(mysqli_affected_rows($conn) > 0){
     $resultStatus = "success";
-    $resultData = $address;
+    $resultData = array('gender'=>$gender, 'address'=>$address);
 }else {
     $resultStatus = "fail";
 }
