@@ -9,6 +9,8 @@
 include "access_allow_origin.php";
 
 $id = $_POST["id"];
+$pageSize = $_POST["pageSize"];
+$pageNum = $_POST["pageNum"];
 
 include 'connect_mysql.php';
 include 'UTF8.php';
@@ -18,7 +20,7 @@ $resultStatus = "";
 
 $socialList = [];
 
-$querySocialcircle = "select user_socialcircle.*,user.avatar,user.name AS uname from user_socialcircle,user where user_socialcircle.id_user=user.id";
+$querySocialcircle = "select user_socialcircle.*,user.avatar,user.name AS uname from user_socialcircle,user where user_socialcircle.id_user=user.id order by user_socialcircle.id DESC limit {$pageNum},{$pageSize}";
 $querySocialcircleImages = "select id AS id_image,id_socialcircle,imgsrc from user_socialimage where ";
 
 $querySocialLike = "select user_sociallike.id_socialcircle from user_sociallike where user_sociallike.id_user='{$id}'";
@@ -32,6 +34,8 @@ if(mysqli_affected_rows($conn) > 0) {
 }else {
     $resultStatus = "fail";
     $resultData = "";
+    echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
+    exit(0);
 }
 
 $ids = [];
@@ -83,6 +87,8 @@ if(mysqli_affected_rows($conn) > 0) {
 
 //var_dump($socialLikeArr);
 $resultData["socialLike"] = $socialLikeArr;
+
+$resultData["totalSize"] = count($resultData["socialList"]);
 
 echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
 

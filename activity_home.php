@@ -11,7 +11,7 @@ include 'connect_mysql.php';
 include 'UTF8.php';
 
 $queryBanner = "select * from activity_banner";
-$queryActivity = "select * from activity";
+$queryActivity = "select * from activity order by id DESC";
 $resultStatus = "";
 
 $activityArr = $conn->query($queryActivity);

@@ -15,7 +15,7 @@ include 'UTF8.php';
 
 $resultStatus = "";
 $stadiumArr = [];
-$queryStadium = "select * from stadium";
+$queryStadium = "select * from stadium order by id DESC";
 $stadiumList = $conn->query($queryStadium);
 
 if (mysqli_affected_rows($conn) > 0) {

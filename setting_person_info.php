@@ -16,8 +16,8 @@ include 'UTF8.php';
 
 $resultStatus= "";
 $resultData="";
-$queryGender = "update user set gender='{$gender}', address='{$address}' where id='{$id}'";
-$conn->query($queryGender);
+$queryPersonInfo = "update user set gender='{$gender}', address='{$address}' where id={$id}";
+$personInfoResult = $conn->query($queryPersonInfo);
 
 if(mysqli_affected_rows($conn) > 0){
     $resultStatus = "success";

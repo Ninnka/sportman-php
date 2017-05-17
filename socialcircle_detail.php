@@ -48,9 +48,9 @@ $resultData["images"] = $socialDetailImageList;
 
 $likeRes = $conn->query($queryLike);
 if(mysqli_affected_rows($conn) > 0) {
-    $resultData["isLike"] = true;
+    $resultData["socialDetail"]["isLike"] = true;
 }else {
-    $resultData["isLike"] = false;
+    $resultData["socialDetail"]["isLike"] = false;
 }
 
 echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));

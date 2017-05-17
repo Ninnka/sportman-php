@@ -9,7 +9,6 @@ static $sportman_pic_prefix = "http://ok7pzw2ak.bkt.clouddn.com/";
 
 function randString() {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $chars .= '!@#$%&*';
 
     $result = '';
     $max = strlen($chars) - 1;

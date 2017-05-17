@@ -35,7 +35,7 @@ if($commentListLength > 0) {
     $resultStatus = "success";
 }
 $resultData["comments"] = $socialDetailCommentList;
-$resultData["total"] = $commentListLength;
+$resultData["totalSize"] = $commentListLength;
 
 echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
 
