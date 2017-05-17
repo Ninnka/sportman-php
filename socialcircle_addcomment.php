@@ -23,16 +23,34 @@ $resultData = [];
 $resultStatus = "";
 
 $queryAddComment = "insert into user_socialcomment(id_user,id_socialcircle,timestamp,locate,comment) VALUES('{$id}','{$id_socialcircle}','{$timestamp}','{$locate}','{$comment}')";
+$updateCommentCount = "update user_socialcircle set commentcount=commentcount+1 where id='{$id_socialcircle}'";
+
+// 开启事务
+$conn->query("SET AUTOCOMMIT=0");
+$conn->begin_transaction();
 
 $addCommentRes = $conn->query($queryAddComment);
-
-if(mysqli_affected_rows($conn) > 0) {
-    $resultStatus = "success";
-    $resultData = "操作成功";
-}else {
+if(mysqli_affected_rows($conn) == 0) {
     $resultStatus = "fail";
     $resultData = "操作失败";
+    $conn->rollback();
+    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+    exit(0);
 }
+
+$updateLikeCountRes = $conn->query($updateCommentCount);
+if(mysqli_affected_rows($conn) == 0) {
+    $resultStatus = "fail";
+    $resultData = "操作失败";
+    $conn->rollback();
+    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+    exit(0);
+}
+
+$conn->commit();
+
+$resultData = "操作成功";
+$resultStatus = "success";
 
 echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
 

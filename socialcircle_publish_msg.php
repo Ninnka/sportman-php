@@ -86,38 +86,37 @@ for($i = 0; $i < count($name); $i++) {
                 $resultData["ret"][] = $ret;
 
                 if($i == count($name) - 1 && (count($resultData["err"]) == count($name) || count($resultData["ret"]) == count($name))) {
-//                    if(count($resultData["ret"]) == count($name)) {
-                        // 开启事务
-                        $conn->query("SET AUTOCOMMIT=0");
-                        $conn->begin_transaction();
 
-                        $createTextResult = $conn->query($queryCreateText);
-                        if(!$createTextResult) {
-                            $resultStatus = "fail";
-                            $resultData = '插入动态消息文本失败';
-                            $conn->rollback();
-                            echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
-                            exit(0);
+                    // 开启事务
+                    $conn->query("SET AUTOCOMMIT=0");
+                    $conn->begin_transaction();
+
+                    $createTextResult = $conn->query($queryCreateText);
+                    if(!$createTextResult) {
+                        $resultStatus = "fail";
+                        $resultData = '插入动态消息文本失败';
+                        $conn->rollback();
+                        echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+                        exit(0);
+                    }
+                    $textIndex = mysqli_insert_id($conn);
+                    $queryCreateImg = "insert into user_socialimage(id_socialcircle, imgsrc)";
+                    for($j = 0; $j < count($resultData["ret"]); $j++) {
+                        $imgsrc = urldecode($resultData["ret"][$j]["key"]);
+                        if($j == 0) {
+                            $queryCreateImg = $queryCreateImg." VALUES('{$textIndex}','{$imgsrc}')";
+                        }else {
+                            $queryCreateImg = $queryCreateImg.", ('{$textIndex}','{$imgsrc}')";
                         }
-                        $textIndex = mysqli_insert_id($conn);
-                        $queryCreateImg = "insert into user_socialimage(id_socialcircle, imgsrc)";
-                        for($j = 0; $j < count($resultData["ret"]); $j++) {
-                            if($j == 0) {
-                                $queryCreateImg = $queryCreateImg." VALUES('{$textIndex}','{$resultData["ret"][$j]["key"]}')";
-                            }else {
-                                $queryCreateImg = $queryCreateImg.", ('{$textIndex}','{$resultData["ret"][$j]["key"]}')";
-                            }
-                        }
-                        $createImgRes = $conn->query($queryCreateImg);
+                    }
+                    $createImgRes = $conn->query($queryCreateImg);
 
-                        // 结束事务
-                        $conn->commit();
+                    // 结束事务
+                    $conn->commit();
 
-                        $resultStatus = "success";
-                        // 插入数据库
-//                    }
-//                    $resultStatus = "fail";
-//                    $resultData["msg"] = "部分图片上传失败";
+                    $resultStatus = "success";
+                    // 插入数据库
+
                     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
                 }
 
