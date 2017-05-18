@@ -18,6 +18,8 @@ $tmp_name = $f["tmp_name"];
 $error = $f["error"];
 $size = $f["size"];
 
+$s = new SaeStorage();
+
 require 'toolkit.php';
 require_once 'php-sdk-7.1.3/autoload.php';
 
