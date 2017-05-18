@@ -64,6 +64,7 @@ if(!$createTextResult) {
     $resultStatus = "success";
     $resultData = '插入动态消息文本成功';
 }
+$textIndex = mysqli_insert_id($conn);
 
 for($i = 0; $i < count($name); $i++) {
     if ($name[$i]) {
@@ -80,7 +81,29 @@ for($i = 0; $i < count($name); $i++) {
 
             $uploadRes = $s->upload( "img" , $key , $tmp_name[$index]);
             if($uploadRes) {
+                $tmpArr = [];
+                $tmpArr["key"] = $key;
+                $resultData["ret"][] = $tmpArr;
                 if($i == count($name) - 1) {
+                    $conn->query("SET AUTOCOMMIT=0");
+                    $conn->begin_transaction();
+                    for($j = 0; $j < count($resultData["ret"]); $j++) {
+                        $imgsrc = urldecode($resultData["ret"][$j]["key"]);
+                        if($j == 0) {
+                            $queryCreateImg = $queryCreateImg." VALUES('{$textIndex}','{$imgsrc}')";
+                        }else {
+                            $queryCreateImg = $queryCreateImg.", ('{$textIndex}','{$imgsrc}')";
+                        }
+                    }
+                    $createImgRes = $conn->query($queryCreateImg);
+                    if(mysqli_affected_rows($conn) == 0) {
+                        $resultStatus = "fail";
+                        $resultData = '导入图片失败';
+                        $conn->rollback();
+                        echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+                        exit(0);
+                    }
+                    $conn->commit();
                     $resultStatus = "success";
                     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
                 }
