@@ -86,6 +86,7 @@ for($i = 0; $i < count($name); $i++) {
                 if($i == count($name) - 1) {
                     $conn->query("SET AUTOCOMMIT=0");
                     $conn->begin_transaction();
+                    $queryCreateImg = "insert into user_socialimage(id_socialcircle, imgsrc)";
                     for($j = 0; $j < count($resultData["ret"]); $j++) {
                         $imgsrc = urldecode($resultData["ret"][$j]["key"]);
                         if($j == 0) {
@@ -94,7 +95,7 @@ for($i = 0; $i < count($name); $i++) {
                             $queryCreateImg = $queryCreateImg.", ('{$textIndex}','{$imgsrc}')";
                         }
                     }
-                    echo "queryCreateImg ".$queryCreateImg;
+//                    echo "queryCreateImg ".$queryCreateImg;
                     $createImgRes = $conn->query($queryCreateImg);
                     if(mysqli_affected_rows($conn) == 0) {
                         echo "fail";
