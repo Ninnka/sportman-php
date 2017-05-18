@@ -19,6 +19,8 @@ $tmp_name = $f["tmp_name"];
 $error = $f["error"];
 $size = $f["size"];
 
+$s = new SaeStorage();
+
 require 'toolkit.php';
 require_once 'php-sdk-7.1.3/autoload.php';
 
@@ -68,70 +70,80 @@ for($i = 0; $i < count($name); $i++) {
         $tmpFileName = $timestamp . randString() . $name[$i];
         $index = $i;
 
-        if (move_uploaded_file($tmp_name[$index], "img/" . $tmpFileName)) {
+//        if (move_uploaded_file($tmp_name[$index], "img/" . $tmpFileName)) {
+
             // 要上传文件的本地路径
             $filePath = "img/" . $tmpFileName;
 
             // 上传到七牛后保存的文件名
             $key = $tmpFileName;
 
-            // 初始化 UploadManager 对象并进行文件的上传
-            $uploadMgr = new UploadManager();
-
-            // 调用 UploadManager 的 putFile 方法进行文件的上传
-            list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
-            if ($err !== null) {
-                // 将信息放入需要返回的数据中
-                $resultData["err"][] = $err;
-
-                if($i == count($name) - 1 && (count($resultData["err"]) == count($name) || count($resultData["ret"]) == count($name))) {
-                    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
-                }
-
-                // 删除服务器上的临时文件
-                if(is_file("img/".$tmpFileName)){
-                    unlink("img/".$tmpFileName);
-                }
-            } else {
-                // 将信息放入需要返回的数据中
-                $resultData["ret"][] = $ret;
-
-                if($i == count($name) - 1 && (count($resultData["err"]) == count($name) || count($resultData["ret"]) == count($name))) {
-
-                    // 开启事务
-                    $conn->query("SET AUTOCOMMIT=0");
-                    $conn->begin_transaction();
-
-
-                    $textIndex = mysqli_insert_id($conn);
-                    $queryCreateImg = "insert into user_socialimage(id_socialcircle, imgsrc)";
-                    for($j = 0; $j < count($resultData["ret"]); $j++) {
-                        $imgsrc = urldecode($resultData["ret"][$j]["key"]);
-                        if($j == 0) {
-                            $queryCreateImg = $queryCreateImg." VALUES('{$textIndex}','{$imgsrc}')";
-                        }else {
-                            $queryCreateImg = $queryCreateImg.", ('{$textIndex}','{$imgsrc}')";
-                        }
-                    }
-                    $createImgRes = $conn->query($queryCreateImg);
-
-                    // 结束事务
-                    $conn->commit();
-
+            $uploadRes = $s->upload( "img" , $key , $tmp_name[$index]);
+            if($uploadRes) {
+                if($i == count($name) - 1) {
                     $resultStatus = "success";
-                    // 插入数据库
-
                     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
                 }
-
-                // 删除服务器上的临时文件
-                if(is_file("img/".$tmpFileName)){
-                    unlink("img/".$tmpFileName);
+            }else {
+                if($i == count($name) - 1) {
+                    $resultStatus = "fail";
+                    $resultData = "图片上传失败";
+                    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
                 }
             }
-        }
+
+            // 初始化 UploadManager 对象并进行文件的上传
+//            $uploadMgr = new UploadManager();
+//
+//            // 调用 UploadManager 的 putFile 方法进行文件的上传
+//            list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+//            if ($err !== null) {
+//                $resultData["err"][] = $err;
+//
+//                if($i == count($name) - 1 && (count($resultData["err"]) == count($name) || count($resultData["ret"]) == count($name))) {
+//                    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+//                }
+//
+////                if(is_file("img/".$tmpFileName)){
+////                    unlink("img/".$tmpFileName);
+////                }
+//            } else {
+//                $resultData["ret"][] = $ret;
+//
+//                if($i == count($name) - 1 && (count($resultData["err"]) == count($name) || count($resultData["ret"]) == count($name))) {
+//
+//                    $conn->query("SET AUTOCOMMIT=0");
+//                    $conn->begin_transaction();
+//
+//
+//                    $textIndex = mysqli_insert_id($conn);
+//                    $queryCreateImg = "insert into user_socialimage(id_socialcircle, imgsrc)";
+//                    for($j = 0; $j < count($resultData["ret"]); $j++) {
+//                        $imgsrc = urldecode($resultData["ret"][$j]["key"]);
+//                        if($j == 0) {
+//                            $queryCreateImg = $queryCreateImg." VALUES('{$textIndex}','{$imgsrc}')";
+//                        }else {
+//                            $queryCreateImg = $queryCreateImg.", ('{$textIndex}','{$imgsrc}')";
+//                        }
+//                    }
+//                    $createImgRes = $conn->query($queryCreateImg);
+//
+//                    $conn->commit();
+//
+//                    $resultStatus = "success";
+//
+//                    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+//                }
+//
+////                if(is_file("img/".$tmpFileName)){
+////                    unlink("img/".$tmpFileName);
+////                }
+//            }
+
+//        }
     }
 }
+
 if(count($name) == 0) {
     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
 }
