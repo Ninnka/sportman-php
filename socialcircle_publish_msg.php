@@ -94,8 +94,10 @@ for($i = 0; $i < count($name); $i++) {
                             $queryCreateImg = $queryCreateImg.", ('{$textIndex}','{$imgsrc}')";
                         }
                     }
+                    echo "queryCreateImg ".$queryCreateImg;
                     $createImgRes = $conn->query($queryCreateImg);
                     if(mysqli_affected_rows($conn) == 0) {
+                        echo "fail";
                         $resultStatus = "fail";
                         $resultData = '导入图片失败';
                         $conn->rollback();
@@ -105,12 +107,14 @@ for($i = 0; $i < count($name); $i++) {
                     $conn->commit();
                     $resultStatus = "success";
                     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+                    exit(0);
                 }
             }else {
                 if($i == count($name) - 1) {
                     $resultStatus = "fail";
                     $resultData = "图片上传失败";
                     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+                    exit(0);
                 }
             }
 
