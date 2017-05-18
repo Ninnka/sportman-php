@@ -53,39 +53,23 @@ for($i = 0; $i < count($name); $i++) {
     if ($name[$i]) {
         $tmpFileName = $timestamp . randString() . $name[$i];
         $index = $i;
-        if (move_uploaded_file($tmp_name[$index], "img/" . $tmpFileName)) {
-            // 要上传文件的本地路径
-            $filePath = "img/" . $tmpFileName;
 
-            // 上传到七牛后保存的文件名
-            $key = $tmpFileName;
+        // 要上传文件的本地路径
+        $filePath = "img/" . $tmpFileName;
 
-            // 初始化 UploadManager 对象并进行文件的上传
-            $uploadMgr = new UploadManager();
+        // 上传到七牛后保存的文件名
+        $key = $tmpFileName;
 
-            // 调用 UploadManager 的 putFile 方法进行文件的上传
-            list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
-            if ($err !== null) {
-                // 将信息放入需要返回的数据中
-                $resultData["err"][] = $err;
-                $resultStatus = "fail";
-                echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
-
-                // 删除服务器上的临时文件
-                if(is_file("img/".$tmpFileName)){
-                    unlink("img/".$tmpFileName);
-                }
-                exit(0);
-            } else {
-                // 将信息放入需要返回的数据中
-                $resultData["ret"][] = $ret;
-
-                // 开启事务
+        $uploadRes = $s->upload( "img" , $key , $tmp_name[$index]);
+        if($uploadRes) {
+            $tmpArr = [];
+            $tmpArr["key"] = $key;
+            $resultData["ret"][] = $tmpArr;
+            if($i == count($name) - 1) {
                 $conn->query("SET AUTOCOMMIT=0");
                 $conn->begin_transaction();
-
                 $querySetImg = "";
-                $imgsrc = "http://ok7pzw2ak.bkt.clouddn.com/".$resultData["ret"][0]["key"];
+                $imgsrc = "http://sportman-img.stor.sinaapp.com/".$resultData["ret"][0]["key"];
                 if($setType == "avatar") {
                     $querySetImg = "update user set avatar='{$imgsrc}'";
                 }else {
@@ -99,19 +83,71 @@ for($i = 0; $i < count($name); $i++) {
                     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
                     exit(0);
                 }
-
-                // 结束事务
                 $conn->commit();
-
                 $resultStatus = "success";
                 echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
-
-                // 删除服务器上的临时文件
-                if(is_file("img/".$tmpFileName)){
-                    unlink("img/".$tmpFileName);
-                }
+                exit(0);
+            }
+        }else {
+            if($i == count($name) - 1) {
+                $resultStatus = "fail";
+                $resultData = "图片上传失败";
+                echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
                 exit(0);
             }
         }
     }
 }
+
+//for($i = 0; $i < count($name); $i++) {
+//    if ($name[$i]) {
+//        $tmpFileName = $timestamp . randString() . $name[$i];
+//        $index = $i;
+//        if (move_uploaded_file($tmp_name[$index], "img/" . $tmpFileName)) {
+//            // 要上传文件的本地路径
+//            $filePath = "img/" . $tmpFileName;
+//
+//            // 上传到七牛后保存的文件名
+//            $key = $tmpFileName;
+//
+//            // 初始化 UploadManager 对象并进行文件的上传
+//            $uploadMgr = new UploadManager();
+//
+//            // 调用 UploadManager 的 putFile 方法进行文件的上传
+//            list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+//            if ($err !== null) {
+//                // 将信息放入需要返回的数据中
+//                $resultData["err"][] = $err;
+//                $resultStatus = "fail";
+//                echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+//
+//                // 删除服务器上的临时文件
+//                if(is_file("img/".$tmpFileName)){
+//                    unlink("img/".$tmpFileName);
+//                }
+//                exit(0);
+//            } else {
+//                // 将信息放入需要返回的数据中
+//                $resultData["ret"][] = $ret;
+//
+//                // 开启事务
+//                $conn->query("SET AUTOCOMMIT=0");
+//                $conn->begin_transaction();
+//
+//
+//
+//                // 结束事务
+//                $conn->commit();
+//
+//                $resultStatus = "success";
+//                echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+//
+//                // 删除服务器上的临时文件
+//                if(is_file("img/".$tmpFileName)){
+//                    unlink("img/".$tmpFileName);
+//                }
+//                exit(0);
+//            }
+//        }
+//    }
+//}
