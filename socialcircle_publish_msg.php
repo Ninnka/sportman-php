@@ -51,12 +51,23 @@ $resultData["ret"] = [];
 $resultData["err"] = [];
 
 $queryCreateText = "insert into user_socialcircle(id_user,timestamp,locate,publish,likecount,commentcount) VALUES('{$id_user}','{$timestamp}','{$locate}','{$text}',0,0)";
-
+$createTextResult = $conn->query($queryCreateText);
+if(!$createTextResult) {
+    $resultStatus = "fail";
+    $resultData = '插入动态消息文本失败';
+    $conn->rollback();
+    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
+    exit(0);
+}else {
+    $resultStatus = "success";
+    $resultData = '插入动态消息文本成功';
+}
 
 for($i = 0; $i < count($name); $i++) {
     if ($name[$i]) {
         $tmpFileName = $timestamp . randString() . $name[$i];
         $index = $i;
+
         if (move_uploaded_file($tmp_name[$index], "img/" . $tmpFileName)) {
             // 要上传文件的本地路径
             $filePath = "img/" . $tmpFileName;
@@ -91,14 +102,7 @@ for($i = 0; $i < count($name); $i++) {
                     $conn->query("SET AUTOCOMMIT=0");
                     $conn->begin_transaction();
 
-                    $createTextResult = $conn->query($queryCreateText);
-                    if(!$createTextResult) {
-                        $resultStatus = "fail";
-                        $resultData = '插入动态消息文本失败';
-                        $conn->rollback();
-                        echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
-                        exit(0);
-                    }
+
                     $textIndex = mysqli_insert_id($conn);
                     $queryCreateImg = "insert into user_socialimage(id_socialcircle, imgsrc)";
                     for($j = 0; $j < count($resultData["ret"]); $j++) {
@@ -127,5 +131,8 @@ for($i = 0; $i < count($name); $i++) {
             }
         }
     }
+}
+if(count($name) == 0) {
+    echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
 }
 
