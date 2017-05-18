@@ -62,7 +62,6 @@ if(!$createTextResult) {
     exit(0);
 }else {
     $resultStatus = "success";
-    $resultData = '插入动态消息文本成功';
 }
 $textIndex = mysqli_insert_id($conn);
 
@@ -168,6 +167,7 @@ for($i = 0; $i < count($name); $i++) {
 }
 
 if(count($name) == 0) {
+    $resultData="上传信息成功";
     echo json_encode(array("resultData"=>$resultData,"resultStatus"=>$resultStatus));
 }
 
