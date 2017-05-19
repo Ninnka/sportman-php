@@ -61,6 +61,7 @@ if(mysqli_affected_rows($conn) == 0) {
     exit(0);
 }
 
+$resultData = "success";
 $conn->commit();
 
 echo json_encode(array("resultData" => $resultData, "resultStatus" => $resultStatus));
